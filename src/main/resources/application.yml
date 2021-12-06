@@ -1,0 +1,47 @@
+spring:
+  main:
+    web-application-type: none
+    banner-mode: off
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: postgres
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+      naming:
+        physical-strategy: com.dins.kafka_app.config.NamingStrategy
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQL10Dialect
+    open-in-view: false
+  kafka:
+    template:
+      default-topic: dins_topic
+    consumer:
+      bootstrap-servers: localhost:9092
+      group-id: dins
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      max-poll-records: 50000000
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: "com.dins.kafka_app.model"
+    producer:
+      group-id: dins
+      bootstrap-servers: localhost:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+hibernate:
+  jdbc:
+    use_streams_for_binary: false
+application:
+  db:
+    table:
+      first: table_one
+      second: table_two
+  random_names: "random_name.txt"
